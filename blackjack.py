@@ -30,7 +30,6 @@ class Shoe(object):
                 self.shoe[randomNum] = temp
 
     def deal(self):
-	print self.shoe
         return self.shoe.pop()
 
 
@@ -123,10 +122,14 @@ def playerPlay(hand, dealer):
             elif softChart[hand.handValue()-1][dealer.hand[0]-2] is 0:
                 stand = True
                 print "soft standing"
-            elif len(hand.hand) is 2 and softChart[hand.handValue()-1][dealer.hand[0]-2] is 2:
-                print "soft double down"
-                hand.double()
-                stand = True
+            elif softChart[hand.handValue()-1][dealer.hand[0]-2] is 2:
+		if len(hand.hand) is 2:
+                    print "soft double down"
+                    hand.double()
+		    hand.softConvert()
+                    stand = True
+		else: 
+		    hand.hit()
             else:
                 stand = True
 
@@ -205,8 +208,6 @@ def play():
                 playerHand.append(splitHand)
   	else:
 	    complete = True
-
-            # TODO  splits hand correctly then 0 and 1 in the list are both sides of the split. x is then incremented and list item 0 is left undealt with
 
     print "\nDealer Hand:"
     print dealerHand.handValue()
