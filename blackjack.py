@@ -196,15 +196,15 @@ def play():
     x = 0
 
     while not complete:
-        splitHand = playerPlay(playerHand[x], dealerHand)
+	if len(playerHand) >= x:
+            splitHand = playerPlay(playerHand[x], dealerHand)
 
-        if not splitHand:
-            complete = True
-        elif splitHand is "cont":
-            x = x + 1
-        else:
-            playerHand.append(splitHand)
-
+            if splitHand is "cont":
+                x = x + 1
+            else:
+                playerHand.append(splitHand)
+  	else:
+	    complete = True
 
             # TODO  splits hand correctly then 0 and 1 in the list are both sides of the split. x is then incremented and list item 0 is left undealt with
 
