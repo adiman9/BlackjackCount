@@ -95,6 +95,15 @@ class Hand(object):
             return True
         return False
 
+
+class Player(object):
+    
+    hand = []
+    
+    def __init__(self, bankroll):
+	self.bankroll = bankroll
+	
+
 def playerPlay(hand, dealer):
     stand = False
     notSplitting = False
@@ -186,40 +195,34 @@ def decideWinner(player, dealer):
         print "its a tie!"
 
 
-def play():
+def play(numPlayers, bankroll):
 
     dealerHand = Hand()
+    players = []
 
-    playerHand = []
-    playerHand.append(Hand())
+    for x in range(numPlayers):
+	players[x] = Player(bankroll)
+        players[x].hand.append(Hand())
 
     dealerPlay(dealerHand)
 
     complete = False
-    x = 0
 
-    while not complete:
-	if len(playerHand) > x:
-            splitHand = playerPlay(playerHand[x], dealerHand)
+    for y in players:
+        x = 0
+        while not complete:
+            if len(y.hand) > x:
+                splitHand = playerPlay(y.hand[x], dealerHand)
 
-            if splitHand is "cont":
-                x = x + 1
-            else:
-                playerHand.append(splitHand)
-  	else:
-	    complete = True
+                if splitHand is "cont":
+                    x = x + 1
+                else:
+                    y.hand.append(splitHand)
+   	    else:
+		for z in y.hand:
+		    decideWinner(z, dealerHand)
 
-    print "\nDealer Hand:"
-    print dealerHand.handValue()
-    print dealerHand.hand
-    print "\n"
-
-    for x in range(len(playerHand)):
-        print "Player 1 hand " + str(x)
-        print playerHand[x].handValue()
-        print playerHand[x].hand
-        decideWinner(playerHand[x], dealerHand)
-        print "\n"
+	        complete = True
 
 
 softChart = [
@@ -287,7 +290,7 @@ hardChart = [
 
 shoe = Shoe(6)
 
-play()
+play(2, 10000)
 
 
 
