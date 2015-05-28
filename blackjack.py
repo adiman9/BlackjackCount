@@ -201,7 +201,7 @@ def play(numPlayers, bankroll):
     players = []
 
     for x in range(numPlayers):
-	players[x] = Player(bankroll)
+	players.append(Player(bankroll))
         players[x].hand.append(Hand())
 
     dealerPlay(dealerHand)
