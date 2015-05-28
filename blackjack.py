@@ -5,21 +5,20 @@ class Shoe(object):
 
     def __init__(self, numDecks):
         self.numDecks = numDecks
-        # self.shoe = [None] * numDecks * 52
+        self.shoe = [None] * numDecks * 52
 
-        # for x in range(0, numDecks):
-        #     for y in range(0, 4):
-        #         for z in range(1, 14):
-        #             if z > 10:
-        #                 self.shoe[z-1+y*13+x*52] = 10
-        #             elif z == 1:
-        #                 self.shoe[z-1+y*13+x*52] = 11
-        #             else:
-        #                 self.shoe[z-1+y*13+x*52] = z
+        for x in range(0, numDecks):
+            for y in range(0, 4):
+                for z in range(1, 14):
+                    if z > 10:
+                        self.shoe[z-1+y*13+x*52] = 10
+                    elif z == 1:
+                        self.shoe[z-1+y*13+x*52] = 11
+                    else:
+                        self.shoe[z-1+y*13+x*52] = z
 
-        # self.shuffle()
+        self.shuffle()
 
-        self.shoe = [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,7,    10, 10,    10, 10,   10, 10,       10, 10,       7,     7,7,       4,6]
 
     def shuffle(self):
 
@@ -31,13 +30,14 @@ class Shoe(object):
                 self.shoe[randomNum] = temp
 
     def deal(self):
+	print self.shoe
         return self.shoe.pop()
 
 
 class Hand(object):
 
     hand = []
-    newSplit = []
+    newSplit = [None]
     double = False
 
     def __init__(self, hand = []):
@@ -62,7 +62,7 @@ class Hand(object):
         splitHand[0] = self.hand.pop()
         splitHand.append(shoe.deal())
 
-        self.newSplit.append(Hand(splitHand))
+        self.newSplit[0] = Hand(splitHand)
 
         self.hit()
 
