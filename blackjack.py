@@ -196,7 +196,7 @@ def play():
     x = 0
 
     while not complete:
-	if len(playerHand) >= x:
+	if len(playerHand) > x:
             splitHand = playerPlay(playerHand[x], dealerHand)
 
             if splitHand is "cont":
