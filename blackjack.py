@@ -126,7 +126,8 @@ def playerPlay(hand, dealer):
 		if len(hand.hand) is 2:
                     print "soft double down"
                     hand.double()
-		    hand.softConvert()
+		    if hand.handValue() > 21:
+		        hand.softConvert()
                     stand = True
 		else: 
 		    hand.hit()
