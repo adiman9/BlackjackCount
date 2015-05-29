@@ -5,20 +5,7 @@ class Shoe(object):
 
     def __init__(self, numDecks):
         self.numDecks = numDecks
-        self.shoe = [None] * numDecks * 52
-
-        for x in range(0, numDecks):
-            for y in range(0, 4):
-                for z in range(1, 14):
-                    if z > 10:
-                        self.shoe[z-1+y*13+x*52] = 10
-                    elif z == 1:
-                        self.shoe[z-1+y*13+x*52] = 11
-                    else:
-                        self.shoe[z-1+y*13+x*52] = z
-
-        self.shuffle()
-
+	self.initDeck()
 
     def shuffle(self):
 
@@ -29,7 +16,26 @@ class Shoe(object):
                 self.shoe[j] = self.shoe[randomNum]
                 self.shoe[randomNum] = temp
 
+    def initDeck(self):
+
+	self.shoe = [None] * self.numDecks * 52
+
+ 	for x in range(0, self.numDecks):
+            for y in range(0, 4):
+                for z in range(1, 14):
+                    if z > 10:
+                        self.shoe[z-1+y*13+x*52] = 10
+                    elif z == 1:
+                        self.shoe[z-1+y*13+x*52] = 11
+                    else:
+                        self.shoe[z-1+y*13+x*52] = z
+
+	self.shuffle()	
+
     def deal(self):
+	if len(self.shoe) < 0.2 * self.numDecks * 52:
+	    self.initDeck()
+
         return self.shoe.pop()
 
 
@@ -119,7 +125,6 @@ def playerPlay(hand, dealer):
             if splitChart[hand.hand[0]-1][dealer.hand[0]-2] is 0:
                 notSplitting = True
             else:
-		print "split"
                 hand.split()
                 return hand.newSplit[0]
         elif hand.isSoft():
@@ -172,38 +177,30 @@ def dealerPlay(hand):
 
 def decideWinner(player, dealer):
     if player.handValue() > 21:
-        print "Player Bust, Dealer wins!"
 	if str(player.getDouble()) is "True":
 	    return -2
 	return -1
     elif dealer.isBlackjack() and not player.isBlackjack():
-        print "Dealer has Blackjack!"
 	if str(player.getDouble()) is "True":
 	    return -2
 	return -1
     elif dealer.isBlackjack() and player.isBlackjack():
-        print "Player and Dealer both have Blackjack!"
 	return 0
     elif player.isBlackjack():
-        print "Player has Blackjack!"
 	return 1.5
     elif player.handValue() < 22 and dealer.handValue() > 21:
-        print "dealer bust, player wins!"
 	if str(player.getDouble()) is "True":
 	    return 2
 	return 1
     elif player.handValue() > dealer.handValue():
-        print "player wins!"
 	if str(player.getDouble()) is "True":
 	    return 2
 	return 1
     elif dealer.handValue() > player.handValue():
-        print "dealer wins"
 	if str(player.getDouble()) is "True":
 	    return -2
 	return -1
     else:
-        print "its a tie!"
 	return 0
 
 
@@ -246,12 +243,9 @@ def play(numPlayers, iterations, bankroll, betSize):
 			playerRolls[y].bankroll = playerRolls[y].bankroll + win*betSize
 		    complete = True
 
+    print "\n"
     for x in range(0, numPlayers):
-	print len(players[x])
-	for y in range(0, len(players[x])):
-	    print players[x][y].hand
-	    print players[x][y].handValue()
-	print playerRolls[x].bankroll
+	print  "Player " + str(x + 1) + " bankroll: " + str(playerRolls[x].bankroll)
 	print "\n" 
 
 softChart = [
@@ -319,11 +313,10 @@ hardChart = [
 
 shoe = Shoe(6)
 
-play(7, 10, 10000,  1)
+play(7, 10000, 10000,  1)
 
 
 
 #TODO
 # look into passing to a split hand that it cannot acheive blackjack
 # Split aces cannot take another card
-# look to reshuffle the cards when the shoe nears the end
