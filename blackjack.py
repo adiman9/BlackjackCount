@@ -175,18 +175,18 @@ def dealerPlay(hand):
         else:
             stand = True
 
-def decideWinner(player, dealer):
+def decideWinner(player, dealer, split):
     if player.handValue() > 21:
 	if str(player.getDouble()) is "True":
 	    return -2
 	return -1
-    elif dealer.isBlackjack() and not player.isBlackjack():
+    elif dealer.isBlackjack() and (not player.isBlackjack() or (player.isBlackjack() and split)):
 	if str(player.getDouble()) is "True":
 	    return -2
 	return -1
-    elif dealer.isBlackjack() and player.isBlackjack():
+    elif dealer.isBlackjack() and player.isBlackjack() and not split:
 	return 0
-    elif player.isBlackjack():
+    elif player.isBlackjack() and not split:
 	return 1.5
     elif player.handValue() < 22 and dealer.handValue() > 21:
 	if str(player.getDouble()) is "True":
@@ -228,10 +228,13 @@ def play(numPlayers, iterations, bankroll, betSize):
 	for y in range(0, numPlayers):
 	    complete = False
    	    x = 0
-
+	    
 	    while not complete:
 		if len(players[y]) > x:
-		    splitHand = playerPlay(players[y][x], dealerHand)
+		    if len(players[y]) > 1 and players[y][0].hand[0] is 11:
+			splitHand = "cont"
+		    else:
+		        splitHand = playerPlay(players[y][x], dealerHand)
 
 		    if splitHand is "cont":
 			x = x + 1
@@ -239,7 +242,10 @@ def play(numPlayers, iterations, bankroll, betSize):
 			players[y].append(splitHand)				
 		else:
 		    for z in players[y]:
-			win = decideWinner(z, dealerHand)
+			if len(players[y]) > 1:
+			    win = decideWinner(z, dealerHand, True)
+			else:
+			    win = decideWinner(z, dealerHand, False)
 			playerRolls[y].bankroll = playerRolls[y].bankroll + win*betSize
 		    complete = True
 
@@ -313,10 +319,4 @@ hardChart = [
 
 shoe = Shoe(6)
 
-play(7, 10000, 10000,  1)
-
-
-
-#TODO
-# look into passing to a split hand that it cannot acheive blackjack
-# Split aces cannot take another card
+play(4, 1000, 10000,  1)
