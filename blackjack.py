@@ -209,15 +209,17 @@ def decideWinner(player, dealer):
 
 def play(numPlayers, iterations, bankroll, betSize):
 
-    players = []
     playerRolls = [object]*numPlayers	
 	
     for x in range(0, numPlayers):
-	players.append([])
 	playerRolls[x] = Player(bankroll)	
 
     for j in range(0, iterations):
-	
+	players = []	
+
+	for x in range(0, numPlayers):
+	    players.append([])
+
 	dealerHand = Hand()
 	dealerPlay(dealerHand)
 	
@@ -249,6 +251,7 @@ def play(numPlayers, iterations, bankroll, betSize):
 	for y in range(0, len(players[x])):
 	    print players[x][y].hand
 	    print players[x][y].handValue()
+	print playerRolls[x].bankroll
 	print "\n" 
 
 softChart = [
@@ -316,7 +319,7 @@ hardChart = [
 
 shoe = Shoe(6)
 
-play(7, 1,  10000, 1)
+play(7, 10, 10000,  1)
 
 
 
