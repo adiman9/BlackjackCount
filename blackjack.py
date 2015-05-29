@@ -98,20 +98,15 @@ class Hand(object):
 
     def getDouble(self):
 	if str(self.double) is "True":
-	    print "true"
 	    return True
-	print "false"
 	return False 
 
 
 class Player(object):
     
-    hand = []
-    
     def __init__(self, bankroll):
 	self.bankroll = bankroll
 	
-
 def playerPlay(hand, dealer):
     stand = False
     notSplitting = False
@@ -124,8 +119,8 @@ def playerPlay(hand, dealer):
             if splitChart[hand.hand[0]-1][dealer.hand[0]-2] is 0:
                 notSplitting = True
             else:
-                hand.split()
 		print "split"
+                hand.split()
                 return hand.newSplit[0]
         elif hand.isSoft():
             if hand.handValue() > 21:
@@ -137,7 +132,6 @@ def playerPlay(hand, dealer):
             elif softChart[hand.handValue()-1][dealer.hand[0]-2] is 2:
 		if len(hand.hand) is 2:
                     hand.double()
-		    print "double"
 		    hand.softConvert()
                     stand = True
 		else: 
@@ -152,7 +146,6 @@ def playerPlay(hand, dealer):
                 stand = True
             elif len(hand.hand) is 2 and hardChart[hand.handValue()-1][dealer.hand[0]-2] is 2:
                 hand.double()
-		print "double"
                 stand = True
             else:
                 stand = True
@@ -213,45 +206,49 @@ def decideWinner(player, dealer):
 	return 0
 
 
-def play(numPlayers, bankroll, betSize):
+def play(numPlayers, iterations, bankroll, betSize):
 
-    dealerHand = Hand()
     players = []
+    playerRolls = [object]*numPlayers	
+	
+    for x in range(0, numPlayers):
+	players.append([])
+	playerRolls[x] = Player(bankroll)	
 
-    for x in range(numPlayers):
-	players.append(Player((x+1)*bankroll))
-        players[x].hand.append(Hand())
+    for j in range(0, iterations):
+	
+	dealerHand = Hand()
+	dealerPlay(dealerHand)
+	
+	for x in range(0, numPlayers):
+	    players[x].append(Hand())
+	
+	complete = False
 
-    dealerPlay(dealerHand)
+	for y in range(0, numPlayers):
+	    complete = False
+   	    x = 0
 
-    complete = False
+	    while not complete:
+		if len(players[y]) > x:
+		    splitHand = playerPlay(players[y][x], dealerHand)
 
-    for y in players:
-        x = 0
-        while not complete:
-            if len(y.hand) > x:
-                splitHand = playerPlay(y.hand[x], dealerHand)
+		    if splitHand is "cont":
+			x = x + 1
+		    else:
+			players[y].append(splitHand)				
+		else:
+		    for z in players[y]:
+			win = decideWinner(z, dealerHand)
+			playerRolls[y].bankroll = playerRolls[y].bankroll + win*betSize
+		    complete = True
 
-                if splitHand is "cont":
-                    x = x + 1
-                else:
-                    y.hand.append(splitHand)
-   	    else:
-		for z in y.hand:
-		    win = decideWinner(z, dealerHand)
-		    print "win is " + str(win)
-		    y.bankroll = y.bankroll + win*betSize
-	        complete = True
-    for y in players:
-	for x in y.hand:
-	    print x.handValue()
-	    print x.hand
-	    print "\n"
-	    print dealerHand.handValue()	
-	    print dealerHand.hand
-	    print "\n"
-	    print y.bankroll
-	    print "\n" 
+    for x in range(0, numPlayers):
+	print len(players[x])
+	for y in range(0, len(players[x])):
+	    print players[x][y].hand
+	    print players[x][y].handValue()
+	print "\n" 
 
 softChart = [
                 [   1, 1, 1, 1, 1, 1, 1, 1, 1, 1   ],
@@ -318,7 +315,7 @@ hardChart = [
 
 shoe = Shoe(6)
 
-play(1, 10000, 1)
+play(7, 1,  10000, 1)
 
 
 
