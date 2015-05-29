@@ -325,5 +325,5 @@ play(7, 10, 10000,  1)
 
 #TODO
 # look into passing to a split hand that it cannot acheive blackjack
-# look into how to destroy objects to start a new hand
+# Split aces cannot take another card
 # look to reshuffle the cards when the shoe nears the end
