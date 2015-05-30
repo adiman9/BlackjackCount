@@ -3,13 +3,15 @@ from random import randint
 
 class Shoe(object):
 
+    count = 0
+
     def __init__(self, numDecks):
         self.numDecks = numDecks
 	self.initDeck()
 
     def shuffle(self):
 
-        for i in range(1, 2):
+        for i in range(1, 20):
             for j in range(0, len(self.shoe)):
                 randomNum = int(round(randint(0, len(self.shoe)-1)))
                 temp = self.shoe[j]
@@ -36,6 +38,11 @@ class Shoe(object):
 	if len(self.shoe) < 0.2 * self.numDecks * 52:
 	    self.initDeck()
 
+   	if self.shoe[-1] < 7:
+	    self.count = self.count + 1
+	elif self.shoe[-1] > 9:
+	    self.count = self.count - 1
+	print self.count
         return self.shoe.pop()
 
 
@@ -248,6 +255,7 @@ def play(numPlayers, iterations, bankroll, betSize):
 			    win = decideWinner(z, dealerHand, False)
 			playerRolls[y].bankroll = playerRolls[y].bankroll + win*betSize
 		    complete = True
+	
 
     print "\n"
     for x in range(0, numPlayers):
@@ -319,4 +327,4 @@ hardChart = [
 
 shoe = Shoe(6)
 
-play(4, 1000, 10000,  1)
+play(4, 312, 10000,  1)
