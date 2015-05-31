@@ -42,7 +42,6 @@ class Shoe(object):
 	    self.count = self.count + 1
 	elif self.shoe[-1] > 9:
 	    self.count = self.count - 1
-	print self.count
         return self.shoe.pop()
 
 
@@ -221,6 +220,11 @@ def play(numPlayers, iterations, bankroll, betSize):
     for j in range(0, iterations):
 	players = []	
 
+	filedata.write('start count')
+	filedata.write('\n')
+	filedata.write(str(shoe.count))
+	filedata.write('\n')
+
 	for x in range(0, numPlayers):
 	    players.append([])
 
@@ -236,6 +240,11 @@ def play(numPlayers, iterations, bankroll, betSize):
 	    complete = False
    	    x = 0
 	    
+	    filedata.write('count')
+	    filedata.write('\n')
+	    filedata.write(str(shoe.count))
+	    filedata.write('\n')
+
 	    while not complete:
 		if len(players[y]) > x:
 		    if len(players[y]) > 1 and players[y][0].hand[0] is 11:
@@ -253,6 +262,8 @@ def play(numPlayers, iterations, bankroll, betSize):
 			    win = decideWinner(z, dealerHand, True)
 			else:
 			    win = decideWinner(z, dealerHand, False)
+			filedata.write(str(win))
+			filedata.write('\n')
 			playerRolls[y].bankroll = playerRolls[y].bankroll + win*betSize
 		    complete = True
 	
@@ -261,6 +272,7 @@ def play(numPlayers, iterations, bankroll, betSize):
     for x in range(0, numPlayers):
 	print  "Player " + str(x + 1) + " bankroll: " + str(playerRolls[x].bankroll)
 	print "\n" 
+    filedata.close()
 
 softChart = [
                 [   1, 1, 1, 1, 1, 1, 1, 1, 1, 1   ],
@@ -327,4 +339,6 @@ hardChart = [
 
 shoe = Shoe(6)
 
+filedata = open('blackjack data.txt', 'a')
 play(4, 312, 10000,  1)
+
